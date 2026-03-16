@@ -66,7 +66,7 @@ def add_overlap(chunks, overlap_chars=100):
 
 if __name__ == "__main__":
     # Import our extractor from last step
-    from extract import extract_text
+    from src.extract import extract_text
 
     file_path = "data/test_contract.pdf"
     pages = extract_text(file_path)
