@@ -1,0 +1,17 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+
+# IDE
+.idea/
+
+# Data
+*.pdf
+*.docx
+chroma_db/
+
+# OS
+.DS_Store
