@@ -1,70 +1,169 @@
-# Getting Started with Create React App
+# Legal Contract Analyzer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A RAG-powered legal contract analyzer that extracts, chunks, and embeds contract text to enable cited Q&A and automatic risk detection.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 📄 Upload PDF or DOCX contracts
+- 🔍 Clause-aware chunking with context overlap
+- 🧠 Semantic search using Gemini embeddings + ChromaDB
+- ⚖️ Cross-encoder reranking for more accurate retrieval
+- 💬 Cited Q&A — every answer references the exact clause
+- ⚠️ Automatic risk detection across 9 risk categories
+- 🖥️ React frontend with chat and risk dashboard tabs
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```
+legal-contract-analyzer/
+├── app.py                  # FastAPI backend
+├── main.py                 # CLI entry point
+├── requirements.txt        # Python dependencies
+├── src/
+│   ├── extract.py          # PDF & DOCX text extraction
+│   ├── chunk.py            # Clause-aware chunking
+│   ├── embed.py            # Gemini embedding utilities
+│   ├── retrieve.py         # ChromaDB storage & search + reranking
+│   ├── generate.py         # Gemini answer generation
+│   └── risk.py             # Risk clause detection
+└── frontend/
+    ├── src/
+    │   ├── App.js                        # Main app with state & API calls
+    │   └── components/
+    │       ├── UploadScreen.jsx          # File upload UI
+    │       └── RiskDashboard.jsx         # Risk report UI
+    └── package.json
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Python 3.9+
+- Node.js 18+
+- A [Google AI Studio](https://aistudio.google.com/) API key (free)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Setup
 
-### `npm run eject`
+### 1. Clone the repo
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/your-username/legal-contract-analyzer.git
+cd legal-contract-analyzer
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 2. Create a virtual environment
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+python -m venv venv
+source venv/bin/activate      # macOS/Linux
+venv\Scripts\activate         # Windows
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 3. Install Python dependencies
 
-## Learn More
+```bash
+pip install -r requirements.txt
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 4. Set up your environment variables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Create a `.env` file in the project root:
 
-### Code Splitting
+```
+GOOGLE_API_KEY=your_google_api_key_here
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+> Get your free API key at https://aistudio.google.com/
 
-### Analyzing the Bundle Size
+### 5. Install frontend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+cd frontend
+npm install
+```
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Running the App
 
-### Advanced Configuration
+### Start the backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+From the project root:
 
-### Deployment
+```bash
+uvicorn app:app --reload
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The API will be available at `http://localhost:8000`
 
-### `npm run build` fails to minify
+### Start the frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+In a separate terminal, from the `frontend/` folder:
+
+```bash
+npm start
+```
+
+The app will open at `http://localhost:3000`
+
+---
+
+## CLI Usage
+
+To run without the frontend, use the command-line interface:
+
+```bash
+python main.py
+```
+
+This will:
+1. Ingest `data/test_contract.pdf`
+2. Print a risk report
+3. Start an interactive Q&A loop
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Health check |
+| `POST` | `/contracts/upload` | Upload and analyze a contract |
+| `POST` | `/contracts/{name}/query` | Ask a question about a contract |
+| `GET` | `/contracts/{name}/risks` | Get the risk report for a contract |
+| `GET` | `/contracts` | List all uploaded contracts |
+
+---
+
+## Risk Categories Detected
+
+- Non-compete clause
+- Unlimited liability
+- Automatic renewal
+- Broad IP assignment
+- One-sided termination
+- Broad indemnification
+- Non-solicitation
+- Unrestricted data use
+- Survival beyond termination
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| LLM & Embeddings | Google Gemini 2.0 Flash + Gemini Embedding 001 |
+| Vector Database | ChromaDB (persistent, local) |
+| Reranking | `cross-encoder/ms-marco-MiniLM-L-6-v2` |
+| Backend | FastAPI + Uvicorn |
+| Frontend | React |
+| PDF Extraction | PyMuPDF |
+| DOCX Extraction | python-docx |
