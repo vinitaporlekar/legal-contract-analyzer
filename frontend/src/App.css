@@ -1,0 +1,168 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f6fa;
+  color: #2d3436;
+}
+
+.app { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+.header {
+  text-align: center;
+  padding: 30px 0 20px;
+}
+.header h1 { font-size: 28px; color: #2d3436; }
+.header p { color: #636e72; margin-top: 6px; }
+
+/* Upload */
+.upload-section {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+.upload-box {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 500px;
+}
+.upload-box h2 { margin-bottom: 8px; }
+.upload-box p { color: #636e72; margin-bottom: 20px; }
+.upload-box input[type="file"] { margin-bottom: 16px; }
+.upload-box button {
+  background: #0984e3;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.upload-box button:disabled { background: #b2bec3; cursor: not-allowed; }
+.loading-text { color: #636e72; margin-top: 16px; font-size: 14px; }
+
+/* Contract info bar */
+.contract-info {
+  display: flex;
+  gap: 20px;
+  background: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.tab {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1px solid #dfe6e9;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+.tab.active { background: #0984e3; color: white; border-color: #0984e3; }
+
+/* Chat */
+.chat-section { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; }
+.messages { padding: 20px; min-height: 300px; max-height: 500px; overflow-y: auto; }
+.empty-state { text-align: center; padding: 40px 0; }
+.empty-state p { color: #636e72; margin-bottom: 16px; }
+.suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.suggestion {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #dfe6e9;
+  background: #f5f6fa;
+  cursor: pointer;
+  font-size: 13px;
+}
+.suggestion:hover { background: #dfe6e9; }
+
+.message { margin-bottom: 16px; }
+.message.user .message-text {
+  background: #0984e3;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px 12px 4px 12px;
+  display: inline-block;
+  max-width: 80%;
+  float: right;
+}
+.message.assistant .message-text {
+  background: #f5f6fa;
+  padding: 12px 16px;
+  border-radius: 12px 12px 12px 4px;
+  max-width: 90%;
+  line-height: 1.6;
+}
+.message.assistant::after { content: ''; display: block; clear: both; }
+.message.user::after { content: ''; display: block; clear: both; }
+
+.sources { margin-top: 12px; }
+.sources-title { font-size: 13px; font-weight: 600; color: #636e72; margin-bottom: 8px; }
+.source-card {
+  background: white;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.source-heading { font-weight: 600; margin-bottom: 4px; }
+.source-text { color: #636e72; margin-bottom: 4px; }
+.source-score { color: #0984e3; font-size: 12px; }
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid #dfe6e9;
+}
+.input-row input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+.input-row input:focus { border-color: #0984e3; }
+.input-row button {
+  background: #0984e3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.input-row button:disabled { background: #b2bec3; }
+
+/* Risks */
+.risks-section { display: flex; flex-direction: column; gap: 12px; }
+.no-risks { text-align: center; padding: 40px; color: #27ae60; font-size: 18px; }
+.risk-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+.risk-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.risk-severity {
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.risk-category { font-weight: 600; font-size: 15px; }
+.risk-explanation { color: #2d3436; margin-bottom: 8px; line-height: 1.5; }
+.risk-clause { color: #636e72; font-size: 13px; border-top: 1px solid #dfe6e9; padding-top: 8px; }
