@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
+import UploadScreen from './components/UploadScreen';
+import RiskDashboard from './components/RiskDashboard';
 
 const API = 'http://localhost:8000';
 
@@ -27,7 +29,6 @@ function App() {
       const data = await res.json();
       setContract(data);
 
-      // Fetch risks
       const riskRes = await fetch(`${API}/contracts/${data.contract_name}/risks`);
       const riskData = await riskRes.json();
       setRisks(riskData.risks || []);
@@ -49,26 +50,19 @@ function App() {
       const res = await fetch(`${API}/contracts/${contract.contract_name}/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: question }),
+        body: JSON.stringify({ question }),
       });
       const data = await res.json();
 
-      const botMsg = {
+      setMessages(prev => [...prev, {
         role: 'assistant',
         text: data.answer,
         sources: data.sources,
-      };
-      setMessages(prev => [...prev, botMsg]);
+      }]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'assistant', text: 'Error: ' + err.message }]);
     }
     setLoading(false);
-  };
-
-  const severityColor = (severity) => {
-    if (severity === 'High') return '#e74c3c';
-    if (severity === 'Medium') return '#f39c12';
-    return '#27ae60';
   };
 
   return (
@@ -79,28 +73,19 @@ function App() {
       </header>
 
       {!contract ? (
-        <div className="upload-section">
-          <div className="upload-box">
-            <h2>Upload a Contract</h2>
-            <p>Supports PDF and DOCX files</p>
-            <input
-              type="file"
-              accept=".pdf,.docx"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <button onClick={uploadContract} disabled={!file || loading}>
-              {loading ? 'Processing...' : 'Upload & Analyze'}
-            </button>
-            {loading && <p className="loading-text">Extracting, chunking, embedding, and scanning for risks... This may take a few minutes.</p>}
-          </div>
-        </div>
+        <UploadScreen
+          file={file}
+          setFile={setFile}
+          onUpload={uploadContract}
+          loading={loading}
+        />
       ) : (
         <div className="main-content">
           <div className="contract-info">
             <span>📄 {contract.filename}</span>
             <span>{contract.pages} pages</span>
             <span>{contract.chunks} chunks</span>
-            <span style={{color: contract.risks_found > 0 ? '#e74c3c' : '#27ae60'}}>
+            <span style={{ color: contract.risks_found > 0 ? '#e74c3c' : '#27ae60' }}>
               {contract.risks_found} risks found
             </span>
           </div>
@@ -127,10 +112,11 @@ function App() {
                   <div className="empty-state">
                     <p>Ask a question about your contract</p>
                     <div className="suggestions">
-                      {['What is confidential information?',
+                      {[
+                        'What is confidential information?',
                         'Can the company assign its rights?',
                         'What happens if there is a breach?',
-                        'How long do obligations last?'
+                        'How long do obligations last?',
                       ].map((q, i) => (
                         <button key={i} className="suggestion" onClick={() => setQuestion(q)}>
                           {q}
@@ -156,7 +142,11 @@ function App() {
                     )}
                   </div>
                 ))}
-                {loading && <div className="message assistant"><div className="message-text">Thinking...</div></div>}
+                {loading && (
+                  <div className="message assistant">
+                    <div className="message-text">Thinking...</div>
+                  </div>
+                )}
               </div>
 
               <div className="input-row">
@@ -175,24 +165,7 @@ function App() {
           )}
 
           {activeTab === 'risks' && (
-            <div className="risks-section">
-              {risks.length === 0 ? (
-                <p className="no-risks">No risky clauses detected.</p>
-              ) : (
-                risks.map((r, i) => (
-                  <div key={i} className="risk-card">
-                    <div className="risk-header">
-                      <span className="risk-severity" style={{background: severityColor(r.severity)}}>
-                        {r.severity}
-                      </span>
-                      <span className="risk-category">{r.category}</span>
-                    </div>
-                    <p className="risk-explanation">{r.explanation}</p>
-                    <p className="risk-clause">{r.text.substring(0, 200)}...</p>
-                  </div>
-                ))
-              )}
-            </div>
+            <RiskDashboard risks={risks} />
           )}
         </div>
       )}
